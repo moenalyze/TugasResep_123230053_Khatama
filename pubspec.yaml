@@ -1,0 +1,25 @@
+name: tugas_2_mobile_if_b
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.6.0 # Untuk HTTP Request ke API
+  shared_preferences: ^2.5.3 # Untuk Autentikasi
+  hive: ^2.2.3 # Untuk Database Favorit
+  hive_flutter: ^1.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  hive_generator: ^2.0.1 
+  build_runner: ^2.4.8
+
+flutter:
+  uses-material-design: true
