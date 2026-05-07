@@ -77,7 +77,7 @@ class _DetailScreenState extends State<DetailScreen> {
         SnackBar(
           content: const Text('Ditambahkan ke favorit ❤️'),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: const Color(0xFFE94560),
+          backgroundColor: Colors.pink,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
@@ -106,25 +106,25 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+      backgroundColor: Colors.white,
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFFE94560)))
+              child: CircularProgressIndicator(color: Colors.pink))
           : _errorMessage != null
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.error_outline,
-                          color: Colors.white38, size: 64),
+                          color: Colors.black38, size: 64),
                       const SizedBox(height: 16),
                       Text(_errorMessage!,
-                          style: const TextStyle(color: Colors.white70)),
+                          style: const TextStyle(color: Colors.black54)),
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: _fetchDetail,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFE94560),
+                          backgroundColor: Colors.pink,
                         ),
                         child: const Text('Coba Lagi',
                             style: TextStyle(color: Colors.white)),
@@ -146,7 +146,7 @@ class _DetailScreenState extends State<DetailScreen> {
         SliverAppBar(
           expandedHeight: 280,
           pinned: true,
-          backgroundColor: const Color(0xFF16213E),
+          backgroundColor: Colors.pink,
           foregroundColor: Colors.white,
           actions: [
             ValueListenableBuilder(
@@ -161,7 +161,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     child: Icon(
                       isFav ? Icons.favorite : Icons.favorite_border,
                       key: ValueKey(isFav),
-                      color: isFav ? const Color(0xFFE94560) : Colors.white,
+                      color: isFav ? Colors.pink : Colors.white,
                       size: 28,
                     ),
                   ),
@@ -179,21 +179,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   meal['strMealThumb'] ?? '',
                   fit: BoxFit.cover,
                   errorBuilder: (_, _, _) => Container(
-                    color: const Color(0xFF16213E),
+                    color: Colors.white,
                     child: const Icon(Icons.broken_image,
-                        color: Colors.white24, size: 60),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        const Color(0xFF1A1A2E).withOpacity(0.9),
-                      ],
-                    ),
+                        color: Colors.black26, size: 60),
                   ),
                 ),
               ],
@@ -210,7 +198,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 Text(
                   meal['strMeal'] ?? '',
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: Colors.black87,
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
                     height: 1.3,
@@ -243,13 +231,13 @@ class _DetailScreenState extends State<DetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Icon(Icons.circle,
-                            color: Color(0xFFE94560), size: 8),
+                            color: Colors.pink, size: 8),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             ing,
                             style: const TextStyle(
-                                color: Colors.white70, fontSize: 14),
+                                color: Colors.black87, fontSize: 14),
                           ),
                         ),
                       ],
@@ -264,15 +252,15 @@ class _DetailScreenState extends State<DetailScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.pink.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(16),
                     border:
-                        Border.all(color: Colors.white.withOpacity(0.08)),
+                        Border.all(color: Colors.pink.withValues(alpha: 0.1)),
                   ),
                   child: Text(
                     instructions,
                     style: const TextStyle(
-                        color: Colors.white70,
+                        color: Colors.black87,
                         fontSize: 14,
                         height: 1.7),
                   ),
@@ -298,20 +286,20 @@ class _InfoChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFE94560).withOpacity(0.15),
+        color: Colors.pink.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
         border:
-            Border.all(color: const Color(0xFFE94560).withOpacity(0.4)),
+            Border.all(color: Colors.pink.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: const Color(0xFFE94560), size: 15),
+          Icon(icon, color: Colors.pink, size: 15),
           const SizedBox(width: 6),
           Text(
             label,
             style: const TextStyle(
-                color: Color(0xFFE94560),
+                color: Colors.pink,
                 fontSize: 13,
                 fontWeight: FontWeight.w500),
           ),
@@ -331,12 +319,12 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFFE94560), size: 22),
+        Icon(icon, color: Colors.pink, size: 22),
         const SizedBox(width: 10),
         Text(
           title,
           style: const TextStyle(
-            color: Colors.white,
+            color: Colors.black87,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),

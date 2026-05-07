@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import '../api_service/auth_service.dart';
 import '../api_service/meal_api_service.dart';
@@ -19,16 +18,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int _selectedIndex = 0;
   List<Map<String, dynamic>> _meals = [];
-  List<String> _categories = [];
-  String _selectedCategory = 'Seafood';
   
   bool _isLoading = true;
-  bool _isSearching = false;
   String? _errorMessage;
   String? _username;
-
-  final TextEditingController _searchController = TextEditingController();
-  Timer? _debounce;
 
   @override
   void initState() {
@@ -36,112 +29,47 @@ class _HomeScreenState extends State<HomeScreen> {
     _initialLoad();
   }
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _debounce?.cancel();
-    super.dispose();
-  }
-
   Future<void> _initialLoad() async {
     setState(() => _isLoading = true);
     try {
       final username = await _authService.getLoggedInUsername();
-      final categories = await _apiService.fetchCategories();
-      final meals = await _apiService.fetchMealsByCategory(_selectedCategory);
+      // Only fetch Chicken category as requested
+      final meals = await _apiService.fetchMealsByCategory('Chicken');
       
       if (!mounted) return;
       setState(() {
         _username = username;
-        _categories = categories;
         _meals = meals;
         _isLoading = false;
       });
     } catch (e) {
-      _handleError('Gagal memuat data awal.');
-    }
-  }
-
-  Future<void> _changeCategory(String category) async {
-    if (_selectedCategory == category && !_isSearching) return;
-    
-    setState(() {
-      _selectedCategory = category;
-      _isLoading = true;
-      _isSearching = false;
-      _searchController.clear();
-      _errorMessage = null;
-    });
-
-    try {
-      final meals = await _apiService.fetchMealsByCategory(category);
       if (!mounted) return;
       setState(() {
-        _meals = meals;
+        _errorMessage = 'Gagal memuat resep Chicken.';
         _isLoading = false;
       });
-    } catch (e) {
-      _handleError('Gagal memuat resep kategori $category.');
     }
-  }
-
-  void _onSearchChanged(String query) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      if (query.isEmpty) {
-        _changeCategory(_selectedCategory);
-      } else {
-        _performSearch(query);
-      }
-    });
-  }
-
-  Future<void> _performSearch(String query) async {
-    setState(() {
-      _isLoading = true;
-      _isSearching = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final results = await _apiService.searchMeals(query);
-      if (!mounted) return;
-      setState(() {
-        _meals = results;
-        _isLoading = false;
-      });
-    } catch (e) {
-      _handleError('Gagal mencari resep.');
-    }
-  }
-
-  void _handleError(String msg) {
-    if (!mounted) return;
-    setState(() {
-      _errorMessage = msg;
-      _isLoading = false;
-    });
   }
 
   Future<void> _handleLogout() async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF16213E),
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Logout',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
         content: const Text('Apakah Anda yakin ingin keluar?',
-            style: TextStyle(color: Colors.white70)),
+            style: TextStyle(color: Colors.black54)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Batal', style: TextStyle(color: Colors.white54)),
+            child: const Text('Batal', style: TextStyle(color: Colors.black54)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFE94560),
+              backgroundColor: Colors.pink,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             child: const Text('Logout', style: TextStyle(color: Colors.white)),
@@ -161,47 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Widget _buildCategoryList() {
-    return Container(
-      height: 50,
-      margin: const EdgeInsets.symmetric(vertical: 12),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: _categories.length,
-        itemBuilder: (ctx, i) {
-          final cat = _categories[i];
-          final isSelected = _selectedCategory == cat && !_isSearching;
-          return Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: ChoiceChip(
-              label: Text(cat),
-              selected: isSelected,
-              onSelected: (_) => _changeCategory(cat),
-              selectedColor: const Color(0xFFE94560),
-              backgroundColor: Colors.white.withOpacity(0.05),
-              labelStyle: TextStyle(
-                color: isSelected ? Colors.white : Colors.white70,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(
-                  color: isSelected ? const Color(0xFFE94560) : Colors.transparent,
-                ),
-              ),
-              showCheckmark: false,
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   Widget _buildHomeTab() {
     if (_isLoading && _meals.isEmpty) {
       return const Center(
-        child: CircularProgressIndicator(color: Color(0xFFE94560)),
+        child: CircularProgressIndicator(color: Colors.pink),
       );
     }
 
@@ -212,13 +103,13 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline, color: Colors.white38, size: 64),
+              const Icon(Icons.error_outline, color: Colors.black38, size: 64),
               const SizedBox(height: 16),
-              Text(_errorMessage!, style: const TextStyle(color: Colors.white70)),
+              Text(_errorMessage!, style: const TextStyle(color: Colors.black54)),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _initialLoad,
-                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE94560)),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.pink),
                 child: const Text('Coba Lagi', style: TextStyle(color: Colors.white)),
               ),
             ],
@@ -227,50 +118,44 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    return Column(
-      children: [
-        _buildCategoryList(),
-        Expanded(
-          child: RefreshIndicator(
-            onRefresh: () => _isSearching ? _performSearch(_searchController.text) : _changeCategory(_selectedCategory),
-            color: const Color(0xFFE94560),
-            child: _meals.isEmpty
-                ? const Center(
-                    child: Text('Tidak ada resep ditemukan.',
-                        style: TextStyle(color: Colors.white54)),
-                  )
-                : GridView.builder(
-                    padding: const EdgeInsets.all(16),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 14,
-                      mainAxisSpacing: 14,
-                      childAspectRatio: 0.8,
-                    ),
-                    itemCount: _meals.length,
-                    itemBuilder: (ctx, i) => _MealCard(
-                      meal: _meals[i],
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => DetailScreen(mealId: _meals[i]['id']),
-                        ),
-                      ),
-                    ),
+    return RefreshIndicator(
+      onRefresh: _initialLoad,
+      color: Colors.pink,
+      backgroundColor: Colors.white,
+      child: _meals.isEmpty
+          ? const Center(
+              child: Text('Tidak ada resep ditemukan.',
+                  style: TextStyle(color: Colors.black54)),
+            )
+          : GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 14,
+                mainAxisSpacing: 14,
+                childAspectRatio: 0.8,
+              ),
+              itemCount: _meals.length,
+              itemBuilder: (ctx, i) => _MealCard(
+                meal: _meals[i],
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => DetailScreen(mealId: _meals[i]['id']),
                   ),
-          ),
-        ),
-      ],
+                ),
+              ),
+            ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+      backgroundColor: const Color(0xFFFDE8E9), // Light pinkish background
       appBar: _selectedIndex == 0
           ? AppBar(
-              backgroundColor: const Color(0xFF16213E),
+              backgroundColor: Colors.pink,
               elevation: 0,
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,51 +164,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   if (_username != null)
                     Text('Halo, $_username!',
-                        style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                        style: const TextStyle(color: Colors.white70, fontSize: 12)),
                 ],
               ),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.logout, color: Color(0xFFE94560)),
+                  icon: const Icon(Icons.logout, color: Colors.white),
                   onPressed: _handleLogout,
                 ),
               ],
             )
           : null,
-      body: Column(
-        children: [
-          if (_selectedIndex == 0)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: TextField(
-                controller: _searchController,
-                onChanged: _onSearchChanged,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: 'Cari resep apapun...',
-                  hintStyle: const TextStyle(color: Colors.white38),
-                  prefixIcon: const Icon(Icons.search, color: Colors.white38),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.07),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-              ),
-            ),
-          Expanded(
-            child: _selectedIndex == 0 ? _buildHomeTab() : const FavoriteScreen(),
-          ),
-        ],
-      ),
+      body: _selectedIndex == 0 ? _buildHomeTab() : const FavoriteScreen(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (i) => setState(() => _selectedIndex = i),
-        backgroundColor: const Color(0xFF16213E),
-        selectedItemColor: const Color(0xFFE94560),
-        unselectedItemColor: Colors.white38,
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.pink,
+        unselectedItemColor: Colors.black38,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorit'),
@@ -345,8 +203,15 @@ class _MealCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF16213E),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.pink.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -358,7 +223,7 @@ class _MealCard extends StatelessWidget {
                   meal['imageUrl'],
                   fit: BoxFit.cover,
                   width: double.infinity,
-                  errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+                  errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.black26),
                 ),
               ),
             ),
@@ -366,7 +231,7 @@ class _MealCard extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Text(
                 meal['title'],
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13),
+                style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w600, fontSize: 13),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

@@ -11,9 +11,9 @@ class FavoriteScreen extends StatelessWidget {
     final favBox = Hive.box<Recipe>('favorites');
 
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+      backgroundColor: const Color(0xFFFDE8E9), // Light pinkish background
       appBar: AppBar(
-        backgroundColor: const Color(0xFF16213E),
+        backgroundColor: Colors.pink,
         elevation: 0,
         title: const Text(
           'Resep Favorit ❤️',
@@ -36,12 +36,12 @@ class FavoriteScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.favorite_border,
-                      color: Colors.white.withOpacity(0.2), size: 80),
+                      color: Colors.pink.withValues(alpha: 0.3), size: 80),
                   const SizedBox(height: 20),
                   const Text(
                     'Belum ada resep favorit',
                     style: TextStyle(
-                        color: Colors.white54,
+                        color: Colors.black54,
                         fontSize: 18,
                         fontWeight: FontWeight.w500),
                   ),
@@ -50,7 +50,7 @@ class FavoriteScreen extends StatelessWidget {
                     'Tambahkan resep favorit Anda\ndari halaman detail',
                     textAlign: TextAlign.center,
                     style:
-                        TextStyle(color: Colors.white38, fontSize: 14),
+                        TextStyle(color: Colors.black38, fontSize: 14),
                   ),
                 ],
               ),
@@ -74,27 +74,27 @@ class FavoriteScreen extends StatelessWidget {
                   final confirm = await showDialog<bool>(
                     context: context,
                     builder: (dCtx) => AlertDialog(
-                      backgroundColor: const Color(0xFF16213E),
+                      backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16)),
                       title: const Text('Hapus Favorit',
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black87,
                               fontWeight: FontWeight.bold)),
                       content: Text(
                         'Hapus "${recipe.title}" dari favorit?',
-                        style: const TextStyle(color: Colors.white70),
+                        style: const TextStyle(color: Colors.black54),
                       ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(dCtx, false),
                           child: const Text('Batal',
-                              style: TextStyle(color: Colors.white54)),
+                              style: TextStyle(color: Colors.black54)),
                         ),
                         ElevatedButton(
                           onPressed: () => Navigator.pop(dCtx, true),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFE94560),
+                            backgroundColor: Colors.pink,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                           ),
@@ -136,11 +136,11 @@ class _FavoriteItem extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF16213E),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.25),
+                color: Colors.pink.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 3),
               ),
@@ -160,9 +160,9 @@ class _FavoriteItem extends StatelessWidget {
                   errorBuilder: (_, _, _) => Container(
                     width: 100,
                     height: 90,
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.pink.withValues(alpha: 0.05),
                     child: const Icon(Icons.broken_image,
-                        color: Colors.white24, size: 32),
+                        color: Colors.black26, size: 32),
                   ),
                 ),
               ),
@@ -178,7 +178,7 @@ class _FavoriteItem extends StatelessWidget {
                       Text(
                         recipe.title,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black87,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
@@ -190,12 +190,12 @@ class _FavoriteItem extends StatelessWidget {
                         Row(
                           children: [
                             const Icon(Icons.category_outlined,
-                                color: Colors.white38, size: 12),
+                                color: Colors.black38, size: 12),
                             const SizedBox(width: 4),
                             Text(
                               recipe.category!,
                               style: const TextStyle(
-                                  color: Colors.white38, fontSize: 12),
+                                  color: Colors.black38, fontSize: 12),
                             ),
                           ],
                         ),
@@ -205,12 +205,12 @@ class _FavoriteItem extends StatelessWidget {
                         Row(
                           children: [
                             const Icon(Icons.public_outlined,
-                                color: Colors.white38, size: 12),
+                                color: Colors.black38, size: 12),
                             const SizedBox(width: 4),
                             Text(
                               recipe.area!,
                               style: const TextStyle(
-                                  color: Colors.white38, fontSize: 12),
+                                  color: Colors.black38, fontSize: 12),
                             ),
                           ],
                         ),
@@ -225,7 +225,7 @@ class _FavoriteItem extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 8),
                 child: IconButton(
                   icon: const Icon(Icons.delete_outline,
-                      color: Color(0xFFE94560), size: 26),
+                      color: Colors.pink, size: 26),
                   onPressed: onDelete,
                   tooltip: 'Hapus dari Favorit',
                 ),

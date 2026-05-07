@@ -25,9 +25,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFE94560),
-          brightness: Brightness.dark,
+          seedColor: Colors.pink,
+          brightness: Brightness.light,
         ),
+        scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
         fontFamily: 'sans-serif',
       ),
@@ -65,25 +66,25 @@ class _SplashRouterState extends State<_SplashRouter> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Color(0xFF1A1A2E),
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.restaurant_menu,
-                color: Color(0xFFE94560), size: 80),
+                color: Colors.pink, size: 80),
             SizedBox(height: 20),
             Text(
               'RecipeBook',
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.pink,
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.5,
               ),
             ),
             SizedBox(height: 40),
-            CircularProgressIndicator(color: Color(0xFFE94560)),
+            CircularProgressIndicator(color: Colors.pink),
           ],
         ),
       ),
